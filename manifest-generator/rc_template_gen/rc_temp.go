@@ -98,6 +98,6 @@ func main() {
 
 	//create_RC_temp("RC.yml", *app_name, *env, *app_group, *container_port, *build_number, *replica_count, *volumes, *volume_mounts, *args, *mem_req, *cpu_req, *mem_lim, *cpu_lim)
 
-	create_RC_temp_v2("RC.yml", args1)
+	create_RC_temp_v2("./manifest-generator/rc_template_gen/RC.yml", args1)
 
 }
