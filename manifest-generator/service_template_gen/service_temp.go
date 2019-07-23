@@ -75,7 +75,7 @@ func main() {
 
 	//create_svc_temp("SVC.yml", *service_name, *app_name, *env, *service_type, *app_group, strconv.Itoa(*container_port), strconv.Itoa(*build_number))
 
-	create_svc_temp_v2("SVC.yml", args)
+	create_svc_temp_v2("./manifest-generator/service_template_gen/SVC.yml", args)
 
 	//cmd := exec.Command("git", "add", "-A")
 	//cmd.Dir = "./service_test"
