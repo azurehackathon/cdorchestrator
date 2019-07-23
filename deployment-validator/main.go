@@ -12,9 +12,9 @@ type response struct {
 	BuildNumber string `json:"BUILD_NUMBER"`
 }
 func main(){
-	if len(os.Args) < 5 {
+	if len(os.Args) < 4 {
 		fmt.Println("Required arguments are missing.")
-		fmt.Println("Usage: go run main.go buildNumber url1 url2 url3")
+		fmt.Println("Usage: go run main.go buildNumber url1 url2")
 		return
 	}
 	currentBuildNumber := os.Args[1]
