@@ -7,6 +7,7 @@ import (
 	"strings"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func create_RC_temp(filename string, app_name string, env string, app_group string, container_port int, build_number int, replca_count int, volumes string, volume_mounts string, args string, memory_requests string, cpu_requests string, memory_limits string, cpu_limits string) {
@@ -45,6 +46,36 @@ func create_RC_temp(filename string, app_name string, env string, app_group stri
 	}
 }
 
+func create_RC_temp_v2(filename string, args1 []string) {
+	input, err := ioutil.ReadFile(filename)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	output  := strings.Replace(string(input), string("<<APP_NAME>>"), string(args1[0]), -1)
+	output  = strings.Replace(output, string("<<ENV_NAME>>"), string(args1[1]), -1)
+	output  = strings.Replace(output, string("<<APP_GROUP>>"), string(args1[2]), -1)
+	output  = strings.Replace(output, string("<<CONTAINER_PORT>>"), args1[3], -1)
+	output  = strings.Replace(output, string("<<BUILD_NUMBER>>"), args1[4], -1)
+	output  = strings.Replace(output, string("<<REPLICA_COUNT>>"), args1[5], -1)
+	output  = strings.Replace(output, string("<<VOLUMES>>"), args1[6], -1)
+	output  = strings.Replace(output, string("<<VOLUME_MOUNTS>>"), args1[7], -1)
+	output  = strings.Replace(output, string("<<ARGS>>"), args1[8], -1)
+	output  = strings.Replace(output, string("<<MEMORY_REQUESTS>>"), args1[9], -1)
+	output  = strings.Replace(output, string("<<CPU_REQUESTS>>"), args1[10], -1)
+	output  = strings.Replace(output, string("<<MEMORY_LIMITS>>"), args1[11], -1)
+	output  = strings.Replace(output, string("<<CPU_LIMITS>>"), args1[12], -1)
+
+	rc_temp := fmt.Sprintf("./RC-%s-%d.yml", args1[0], args1[4])
+
+	if err = ioutil.WriteFile(rc_temp, []byte(output), 0666); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
 func main() {
 
 
@@ -64,6 +95,10 @@ func main() {
 
 	flag.Parse()
 
-	create_RC_temp("RC.yml", *app_name, *env, *app_group, *container_port, *build_number, *replica_count, *volumes, *volume_mounts, *args, *mem_req, *cpu_req, *mem_lim, *cpu_lim)
+	args1 := []string{*app_name, *env, *app_group, strconv.Itoa(*container_port), strconv.Itoa(*build_number), strconv.Itoa(*replica_count), *volumes, *volume_mounts, *args, *mem_req, *cpu_req, *mem_lim, *cpu_lim}
+
+	//create_RC_temp("RC.yml", *app_name, *env, *app_group, *container_port, *build_number, *replica_count, *volumes, *volume_mounts, *args, *mem_req, *cpu_req, *mem_lim, *cpu_lim)
+
+	create_RC_temp_v2("RC.yml", args1)
 
 }
