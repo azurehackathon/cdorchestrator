@@ -1,19 +1,59 @@
----
 apiVersion: v1
-kind: Service
+kind: ReplicationController
 metadata:
-  labels:
-    app: <<APP_NAME>>
-    version: <<APP_NAME>>-<<ENV_NAME>>-<<TYPE>>
-  name: <<APP_NAME>>-<<ENV_NAME>>-<<TYPE>>
+  name: <<APP_NAME>>-<<ENV_NAME>>-<<BUILD_NUMBER>>
   namespace: <<APP_GROUP>>-<<ENV_NAME>>
 spec:
-  ports:
-    -
-      name: http
-      port: 80
-      protocol: TCP
-      targetPort: <<CONTAINER_PORT>>
+  replicas: <<REPLICA_COUNT>>
   selector:
     version: <<APP_NAME>>-<<ENV_NAME>>-<<BUILD_NUMBER>>
-
+  template:
+    metadata:
+      labels:
+        app: <<APP_NAME>>
+        version: <<APP_NAME>>-<<ENV_NAME>>-<<BUILD_NUMBER>>
+        aadpodidbinding: <<APP_GROUP>>-<<ENV_NAME>>
+    spec:
+      volumes: <<VOLUMES>>
+      containers:a
+        - name: <<APP_NAME>>-<<BUILD_NUMBER>>
+          image: "euw030<<ENV_NAME>>acr.azurecr.io/<<APP_NAME>>-<<ENV_NAME>>:<<BUILD_NUMBER>>"
+          volumeMounts: <<VOLUME_MOUNTS>>
+          env:
+            - name: APP_ENV
+              value: "<<ENV_NAME>>"
+            - name: BUILD_NUMBER
+              value: "<<BUILD_NUMBER>>"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: AccountName
+              valueFrom:
+                secretKeyRef:
+                  name: secret-<<APP_GROUP>>-<<ENV_NAME>>
+                  key: AccountName
+            - name: AccountKey
+              valueFrom:
+                secretKeyRef:
+                  name: secret-<<APP_GROUP>>-<<ENV_NAME>>
+                  key: AccountKey
+            - name: EndpointSuffix
+              valueFrom:
+                secretKeyRef:
+                  name: secret-<<APP_GROUP>>-<<ENV_NAME>>
+                  key: EndpointSuffix
+          args: <<ARGS>>
+          resources:
+            requests:
+              memory: "<<MEMORY_REQUESTS>>"
+              cpu: "<<CPU_REQUESTS>>"
+            limits:
+              memory: "<<MEMORY_LIMITS>>"
+              cpu: "<<CPU_LIMITS>>"
+          ports:
+            - containerPort: <<CONTAINER_PORT>>
