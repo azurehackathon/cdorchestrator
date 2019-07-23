@@ -4,7 +4,6 @@ import (
 	"flag"
 	"io/ioutil"
 	"strconv"
-	"strings"
 	"fmt"
 	"os"
 	"strings"
@@ -68,7 +67,7 @@ func create_RC_temp_v2(filename string, args1 []string) {
 	output  = strings.Replace(output, string("<<MEMORY_LIMITS>>"), args1[11], -1)
 	output  = strings.Replace(output, string("<<CPU_LIMITS>>"), args1[12], -1)
 
-	rc_temp := fmt.Sprintf("./RC-%s-%d.yml", args1[0], args1[4])
+	rc_temp := fmt.Sprintf("./RC-%s-%s.yml", args1[0], args1[4])
 
 	if err = ioutil.WriteFile(rc_temp, []byte(output), 0666); err != nil {
 		fmt.Println(err)

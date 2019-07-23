@@ -8,7 +8,7 @@ metadata:
   name: azure-load-balancer
   namespace: <<APP_GROUP>>-<<ENV_NAME>>
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: myResourceGroup
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: <<RESOURCE_GROUP>>
 spec:
   loadBalancerIP: <<PUBLIC_IP>>
   type: LoadBalancer
